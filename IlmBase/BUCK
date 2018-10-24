@@ -1,0 +1,68 @@
+cxx_binary(
+  name = 'to-float', 
+  srcs = [
+    'Half/toFloat.cpp', 
+  ], 
+)
+
+genrule(
+  name = 'to-float-h', 
+  out = 'toFloat.h', 
+  cmd = '$(exe :to-float) > $OUT', 
+)
+
+cxx_binary(
+  name = 'e-lut', 
+  srcs = [
+    'Half/eLut.cpp', 
+  ], 
+)
+
+genrule(
+  name = 'e-lut-h', 
+  out = 'eLut.h', 
+  cmd = '$(exe :e-lut) > $OUT', 
+)
+
+windows_srcs = glob([
+  'Iex/**/*Win32.cpp', 
+  'IexMath/**/*Win32.cpp', 
+  'IlmThread/**/*Win32.cpp', 
+  'Imath/**/*Win32.cpp', 
+])
+
+cxx_library(
+  name = 'ilmbase', 
+  header_namespace = '', 
+  exported_headers = subdir_glob([
+    ('', '**/*.h'), 
+    ('Half', '**/*.h'), 
+    ('iex', '**/*.h'), 
+    ('iexMath', '**/*.h'), 
+    ('IlmThread', '**/*.h'), 
+    ('imath', '**/*.h'), 
+  ]), 
+  exported_platform_headers = [
+    ('macos.*', { 'IlmBaseConfig.h': 'config.macos/IlmBaseConfig.h' }), 
+    ('linux.*', { 'IlmBaseConfig.h': 'config.linux/IlmBaseConfig.h' }), 
+    ('windows.*', { 'IlmBaseConfig.h': 'config.windows/IlmBaseConfig.h' }), 
+  ], 
+  headers = {
+    'toFloat.h': ':to-float-h', 
+    'eLut.h': ':e-lut-h', 
+  }, 
+  srcs = [
+    'Half/half.cpp', 
+  ] + glob([
+    'Iex/**/*.cpp', 
+    'IexMath/**/*.cpp', 
+    'IlmThread/**/*.cpp', 
+    'Imath/**/*.cpp', 
+  ], excludes = windows_srcs), 
+  platform_srcs = [
+    ('windows.*', windows_srcs), 
+  ], 
+  visibility = [
+    'PUBLIC', 
+  ], 
+)

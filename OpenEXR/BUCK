@@ -1,0 +1,86 @@
+def merge_dicts(x, y):
+  z = x.copy()
+  z.update(y)
+  return z
+
+prebuilt_cxx_library(
+  name = 'config', 
+  header_namespace = '', 
+  header_only = True, 
+  exported_platform_headers = [
+    ('macos.*', { 'OpenEXRConfig.h': 'config.macos/OpenEXRConfig.h' }), 
+    ('linux.*', { 'OpenEXRConfig.h': 'config.linux/OpenEXRConfig.h' }), 
+    ('windows.*', { 'OpenEXRConfig.h': 'config.windows/OpenEXRConfig.h' }), 
+  ], 
+  visibility = [
+    'PUBLIC', 
+  ], 
+)
+
+cxx_binary(
+  name = 'b44-exp-log-table', 
+  srcs = [
+    'IlmImf/b44ExpLogTable.cpp', 
+  ], 
+  deps = [
+    '//IlmBase:ilmbase', 
+  ], 
+)
+
+genrule(
+  name = 'b44-exp-log-table-h', 
+  out = 'b44ExpLogTable.h', 
+  cmd = '$(exe :b44-exp-log-table) > $OUT', 
+)
+
+cxx_binary(
+  name = 'dwa-lookups', 
+  header_namespace = '', 
+  headers = subdir_glob([
+    ('IlmImf', '**/*.h'), 
+  ]), 
+  srcs = [
+    'IlmImf/dwaLookups.cpp', 
+  ], 
+  deps = [
+    '//IlmBase:ilmbase', 
+    ':config', 
+  ], 
+)
+
+genrule(
+  name = 'dwa-lookups-h', 
+  out = 'dwaLookups.h', 
+  cmd = '$(exe :dwa-lookups) > $OUT', 
+)
+
+cxx_library(
+  name = 'openexr', 
+  header_namespace = '', 
+  exported_headers = subdir_glob([
+    ('IlmImf', '**/*.h'), 
+    ('IlmImfUtil', '**/*.h'), 
+  ]), 
+  headers = merge_dicts(subdir_glob([
+    ('', 'IlmImf/**/*.h'), 
+    ('', 'IlmImfUtil/**/*.h'), 
+  ]), {
+    'b44ExpLogTable.h': ':b44-exp-log-table-h', 
+    'dwaLookups.h': ':dwa-lookups-h', 
+  }), 
+  srcs = glob([
+    'IlmImf/**/*.cpp', 
+    'IlmImfUtil/**/*.cpp', 
+  ]), 
+  deps = [
+    '//IlmBase:ilmbase', 
+    ':config', 
+  ], 
+  exported_platform_linker_flags = [
+    ('macos.*', [ '-lz' ]), 
+    ('linux.*', [ '-lz' ]), 
+  ], 
+  visibility = [
+    'PUBLIC', 
+  ], 
+)
