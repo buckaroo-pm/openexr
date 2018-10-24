@@ -1,0 +1,6 @@
+{
+  "name": "openexr-openexr",
+  "dependencies": {
+    "madler/zlib": "1.2.11"
+  }
+}

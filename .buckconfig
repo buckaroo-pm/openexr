@@ -1,9 +1,13 @@
-[project]
-  ignore = .git 
-
 [cxx]
-  should_remap_host_platform = true
   untracked_headers = error
+  should_remap_host_platform = true
+
+[project]
+  ignore = .git
 
 [cxx#macosx-x86_64]
   cxxflags = -std=c++14
+
+[repositories]
+  madler.zlib = buckaroo/official/madler/zlib
+

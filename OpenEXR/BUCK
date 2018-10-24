@@ -1,3 +1,5 @@
+include_defs('//BUCKAROO_DEPS')
+
 def merge_dicts(x, y):
   z = x.copy()
   z.update(y)
@@ -72,13 +74,9 @@ cxx_library(
     'IlmImf/**/*.cpp', 
     'IlmImfUtil/**/*.cpp', 
   ]), 
-  deps = [
+  deps = BUCKAROO_DEPS + [
     '//IlmBase:ilmbase', 
     ':config', 
-  ], 
-  exported_platform_linker_flags = [
-    ('macos.*', [ '-lz' ]), 
-    ('linux.*', [ '-lz' ]), 
   ], 
   visibility = [
     'PUBLIC', 
