@@ -1,0 +1,13 @@
+cxx_binary(
+  name = 'exrmultiview', 
+  header_namespace = '', 
+  headers = glob([
+    '*.h', 
+  ]), 
+  srcs = glob([
+    '*.cpp', 
+  ]), 
+  deps = [
+    '//OpenEXR:openexr', 
+  ], 
+)
