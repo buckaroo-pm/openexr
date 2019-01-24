@@ -4,7 +4,6 @@ manifest = "b3d2c34b28bf9b1fc68abdfe152995d5574a490ae55685cae6004447ba25a29d"
 package = "github.com/buckaroo-pm/host-pthread"
 target = "//:pthread"
 
-[[lock]]
-name = "github.com/buckaroo-pm/host-pthread"
-version = "branch=master"
+[lock."github.com/buckaroo-pm/host-pthread"]
+versions = [ "branch=master" ]
 revision = "a62519aa69c8e3243d6065fbf4c1d2de072f86f6"
