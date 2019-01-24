@@ -1,3 +1,6 @@
+load('//:utils.bzl', 'subdir_glob', 'merge_dicts')
+load('//:buckaroo_macros.bzl', 'buckaroo_deps')
+
 cxx_binary(
   name = 'to-float', 
   srcs = [
@@ -37,10 +40,10 @@ cxx_library(
   exported_headers = subdir_glob([
     ('', '**/*.h'), 
     ('Half', '**/*.h'), 
-    ('iex', '**/*.h'), 
-    ('iexMath', '**/*.h'), 
+    ('Iex', '**/*.h'), 
+    ('IexMath', '**/*.h'), 
     ('IlmThread', '**/*.h'), 
-    ('imath', '**/*.h'), 
+    ('Imath', '**/*.h'), 
   ]), 
   exported_platform_headers = [
     ('macos.*', { 'IlmBaseConfig.h': 'config.macos/IlmBaseConfig.h' }), 
@@ -58,10 +61,11 @@ cxx_library(
     'IexMath/**/*.cpp', 
     'IlmThread/**/*.cpp', 
     'Imath/**/*.cpp', 
-  ], excludes = windows_srcs), 
+  ], exclude = windows_srcs), 
   platform_srcs = [
     ('windows.*', windows_srcs), 
   ], 
+  deps = buckaroo_deps(),
   visibility = [
     'PUBLIC', 
   ], 

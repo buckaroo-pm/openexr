@@ -31,3 +31,10 @@ build-nuget/
 .buckconfig.d
 BUCKAROO_DEPS
 buckaroo_macros.bzl
+
+buck-out
+.buckd
+buckaroo
+buckaroo_macros.bzl
+.buckconfig.d
+.buckconfig.local
